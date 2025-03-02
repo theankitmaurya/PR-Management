@@ -33,9 +33,9 @@ export function StatusColumn({
       case TaskStatus.TODO:
         return "bg-gray-100";
       case TaskStatus.IN_PROGRESS:
-        return "bg-blue-50";
+        return "bg-gray-100";
       case TaskStatus.COMPLETED:
-        return "bg-green-50";
+        return "bg-gray-100";
       default:
         return "bg-gray-100";
     }

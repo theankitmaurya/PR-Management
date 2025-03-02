@@ -318,14 +318,18 @@ const ProjectPage = () => {
           <h3 className="text-sm font-medium mb-3">Project Overview</h3>
           <div className="mb-3">
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-primary h-2 rounded-full"
-                style={{ width: `${progressPercentage}%` }}
-              />
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div
+                  className="h-2 rounded-full bg-primary dark:bg-white"
+                  style={{ width: `${progressPercentage}%` }}
+                />
+              </div>
             </div>
             <div className="flex justify-between text-xs mt-1">
-              <span>{progressPercentage}% complete</span>
-              <span>
+              <span className="text-gray-900 dark:text-white">
+                {progressPercentage}% complete
+              </span>
+              <span className="text-gray-900 dark:text-white">
                 {completedTasks}/{totalTasks} tasks
               </span>
             </div>

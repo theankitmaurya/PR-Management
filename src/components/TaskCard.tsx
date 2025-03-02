@@ -25,9 +25,13 @@ export function TaskCard({
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`relative bg-white rounded-lg p-4 mb-3 elevated-card cursor-pointer animate-scale-in group ${
-            snapshot.isDragging ? "shadow-elevated rotate-1" : ""
-          }`}
+          className={`relative bg-white dark:bg-gray-800 rounded-lg p-4 mb-3 shadow-md cursor-pointer group transition-transform duration-150
+            ${snapshot.isDragging ? "shadow-lg scale-105 z-50" : ""}`}
+          style={{
+            ...provided.draggableProps.style,
+            width: "100%", // Ensure it doesn’t shrink while dragging
+            position: snapshot.isDragging ? "fixed" : "relative",
+          }}
         >
           <EditTaskModal
             task={task}
@@ -36,20 +40,20 @@ export function TaskCard({
           />
 
           <div className="flex justify-between items-start mb-2">
-            <h3 className="font-medium text-sm text-gray-900 line-clamp-2">
+            <h3 className="font-medium text-sm text-gray-900 dark:text-white line-clamp-2">
               {task.title}
             </h3>
             <PriorityBadge priority={task.priority} />
           </div>
 
           {task.description && (
-            <p className="text-xs text-gray-500 mb-3 line-clamp-2">
+            <p className="text-xs text-gray-500 dark:text-gray-300 mb-3 line-clamp-2">
               {task.description}
             </p>
           )}
 
           {task.image && (
-            <div className="mb-3 bg-gray-50 rounded-md overflow-hidden">
+            <div className="mb-3 bg-gray-50 dark:bg-gray-700 rounded-md overflow-hidden">
               <div className="aspect-video flex items-center justify-center">
                 <img
                   src={task.image}
@@ -62,10 +66,9 @@ export function TaskCard({
 
           <div className="mt-2 space-y-1.5">
             {task.dueDate && (
-              <div className="flex items-center text-xs text-gray-500">
+              <div className="flex items-center text-xs text-gray-500 dark:text-gray-300">
                 <Calendar className="w-3.5 h-3.5 mr-1.5" />
                 <span>{format(task.dueDate, "MMM d")}</span>
-                {/* Show days remaining */}
                 <span className="ml-auto flex items-center">
                   <Clock className="w-3.5 h-3.5 mr-1.5" />
                   {Math.ceil(

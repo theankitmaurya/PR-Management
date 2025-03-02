@@ -47,27 +47,29 @@ export function TaskBoard({
   };
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="flex space-x-4 overflow-x-auto pb-6 animate-fade-in">
-        <StatusColumn
-          status={TaskStatus.TODO}
-          tasks={todoTasks}
-          onTaskUpdate={onTaskUpdate}
-          onTaskDelete={onTaskDelete}
-        />
-        <StatusColumn
-          status={TaskStatus.IN_PROGRESS}
-          tasks={inProgressTasks}
-          onTaskUpdate={onTaskUpdate}
-          onTaskDelete={onTaskDelete}
-        />
-        <StatusColumn
-          status={TaskStatus.COMPLETED}
-          tasks={completedTasks}
-          onTaskUpdate={onTaskUpdate}
-          onTaskDelete={onTaskDelete}
-        />
-      </div>
-    </DragDropContext>
+    <div className="relative overflow-visible"> {/* Ensure proper positioning */}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <div className="flex space-x-4 pb-6 animate-fade-in">
+          <StatusColumn
+            status={TaskStatus.TODO}
+            tasks={todoTasks}
+            onTaskUpdate={onTaskUpdate}
+            onTaskDelete={onTaskDelete}
+          />
+          <StatusColumn
+            status={TaskStatus.IN_PROGRESS}
+            tasks={inProgressTasks}
+            onTaskUpdate={onTaskUpdate}
+            onTaskDelete={onTaskDelete}
+          />
+          <StatusColumn
+            status={TaskStatus.COMPLETED}
+            tasks={completedTasks}
+            onTaskUpdate={onTaskUpdate}
+            onTaskDelete={onTaskDelete}
+          />
+        </div>
+      </DragDropContext>
+    </div>
   );
 }

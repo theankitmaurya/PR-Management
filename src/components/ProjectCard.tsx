@@ -88,7 +88,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-100">
               {todoCount} to do
             </span>
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-blue-50">
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-100">
               {inProgressCount} in progress
             </span>
           </div>
