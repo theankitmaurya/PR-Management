@@ -23,7 +23,7 @@ export function MobileBottomBar() {
   ];
 
   return (
-    <div className="fixed bottom-4 left-1/2 w-full max-w-md -translate-x-1/2 px-4 z-50">
+    <div className="fixed bottom-4 left-1/2 w-full max-w-md -translate-x-1/2 px-4 z-50 md:hidden">
       <div className="flex items-center justify-between bg-white dark:bg-gray-900 rounded-full py-4 px-6 shadow-lg border border-gray-300 dark:border-gray-700">
         {navItems.map((item) => {
           const isActive =
