@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -27,11 +26,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { deleteUserAccount } from "@/services/supabaseService";
 import { Language } from "@/utils/types";
+import { useTranslation } from "react-i18next";
+import i18n from "@/utils/i18n";
 
 const LANGUAGE_OPTIONS = [
   { value: Language.ENGLISH, label: "English" },
@@ -45,17 +45,19 @@ export default function SettingsPage() {
   const { currentUser, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const {t} = useTranslation();
 
-  const [language, setLanguage] = useState<Language>(Language.ENGLISH);
+  const [language, setLanguage] = useState(i18n.language);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [confirmEmail, setConfirmEmail] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleLanguageChange = (value: Language) => {
+  const handleLanguageChange = (value: string) => {
     setLanguage(value);
+    i18n.changeLanguage(value);
     toast({
-      title: "Language Updated",
-      description: "Your language preference has been updated.",
+      title: t("Language Updated"),
+      description: t("Your language preference has been updated."),
     });
     // In a real application, we would use i18n library to change the language
   };
