@@ -1,10 +1,9 @@
-import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
   Building2,
-  Layout,
   LogOut,
   Menu,
   X,
@@ -21,6 +20,13 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./ThemeToggle";
+import { getUserProfile } from "@/services/supabaseService";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 // Sidebar Link Component
 const SidebarLink = ({
@@ -70,10 +76,44 @@ interface SidebarProps {
 export function Sidebar({ open = true, onOpenChange }: SidebarProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
   const isMobile = useMobile();
-  const { user, signOut } = useAuth();
+  const { currentUser, user, signOut } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname;
+  const [userProfile, setUserProfile] = useState<{
+    fullName: string | null;
+    avatarUrl: string | null;
+  }>({
+    fullName: null,
+    avatarUrl: null,
+  });
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (currentUser) {
+        try {
+          const profile = await getUserProfile();
+          if (profile) {
+            setUserProfile({
+              fullName: profile.full_name,
+              avatarUrl: profile.avatar_url,
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+        }
+      }
+    };
+
+    fetchUserProfile();
+  }, [currentUser]);
+
+  const displayName = userProfile.fullName || currentUser?.email || "User";
+  const userInitial = displayName.charAt(0).toUpperCase();
+
+  const goToProfile = () => {
+    navigate("/profile");
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -146,23 +186,36 @@ export function Sidebar({ open = true, onOpenChange }: SidebarProps) {
 
         <Separator className="my-2" />
 
-        <div className="flex items-center justify-between px-2">
-          <div className="flex items-center truncate">
-            <Avatar className="h-8 w-8 mr-2 flex-shrink-0">
-              <AvatarImage src="" />
-              <AvatarFallback className="bg-primary text-primary-foreground">
-                {user?.email?.[0].toUpperCase() || "U"}
-              </AvatarFallback>
-            </Avatar>
-            <div className="truncate">
-              <p className="text-sm font-medium truncate max-w-[140px]">
-                {user?.email || "user@example.com"}
-              </p>
-            </div>
-          </div>
-          <Button variant="ghost" size="icon" onClick={handleSignOut}>
-            <LogOut className="h-5 w-5" />
-          </Button>
+        <div className="flex flex-col gap-2 pt-6">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="justify-start px-3 w-full hover:bg-secondary"
+              >
+                <Avatar className="mr-2 h-8 w-8">
+                  {userProfile.avatarUrl ? (
+                    <AvatarImage
+                      src={userProfile.avatarUrl}
+                      alt={displayName}
+                    />
+                  ) : (
+                    <AvatarFallback>{userInitial}</AvatarFallback>
+                  )}
+                </Avatar>
+                <span className="md:hidden lg:block text-left">
+                  {displayName}
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-40" align="end" forceMount>
+              <DropdownMenuItem onClick={goToProfile}>Profile</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleSignOut}>
+                Log out
+                <LogOut className="ml-auto h-4 w-4" />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>

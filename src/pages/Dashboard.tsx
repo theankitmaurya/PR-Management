@@ -15,7 +15,7 @@ export default function Dashboard() {
           <img
             src="/dashboard.png"
             alt="Modern Banking Card"
-            className="relative z-10 mx-auto w-full"
+            className="relative z-10 mx-auto w-full rounded-2xl"
           />
         </div>
 

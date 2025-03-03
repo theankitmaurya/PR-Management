@@ -1,13 +1,13 @@
 export enum Priority {
   LOW = "LOW",
   MEDIUM = "MEDIUM",
-  HIGH = "HIGH",
+  HIGH = "HIGH"
 }
 
 export enum TaskStatus {
   TODO = "TODO",
   IN_PROGRESS = "IN_PROGRESS",
-  COMPLETED = "COMPLETED",
+  COMPLETED = "COMPLETED"
 }
 
 export interface Task {
@@ -39,6 +39,13 @@ export interface UserProfile {
   avatarUrl?: string;
   createdAt: Date;
   updatedAt: Date;
+  bio?: string;
+  linkedinUrl?: string;
+  twitterUrl?: string;
+  githubUrl?: string;
+  age?: number;
+  occupation?: string;
+  dateOfBirth?: Date;
 }
 
 export interface DragItem {
@@ -46,4 +53,12 @@ export interface DragItem {
   type: string;
   status: TaskStatus;
   index: number;
+}
+
+export enum Language {
+  ENGLISH = "en",
+  SPANISH = "es",
+  FRENCH = "fr",
+  GERMAN = "de",
+  CHINESE = "zh"
 }

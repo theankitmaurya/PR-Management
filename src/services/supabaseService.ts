@@ -1,15 +1,15 @@
-import { supabase } from "@/integrations/supabase/client";
-import { Priority, Project, Task, TaskStatus } from "@/utils/types";
+import { supabase } from '@/integrations/supabase/client';
+import { Priority, Project, Task, TaskStatus } from '@/utils/types';
 
 // Project services
 export const getProjects = async (): Promise<Project[]> => {
   const { data, error } = await supabase
-    .from("projects")
-    .select("*")
-    .order("created_at", { ascending: false });
+    .from('projects')
+    .select('*')
+    .order('created_at', { ascending: false });
 
   if (error) {
-    console.error("Error fetching projects:", error);
+    console.error('Error fetching projects:', error);
     throw error;
   }
 
@@ -24,7 +24,7 @@ export const getProjects = async (): Promise<Project[]> => {
         coverImage: project.cover_image || undefined,
         createdAt: new Date(project.created_at),
         updatedAt: new Date(project.updated_at),
-        tasks,
+        tasks
       };
     })
   );
@@ -34,13 +34,13 @@ export const getProjects = async (): Promise<Project[]> => {
 
 export const getProjectById = async (id: string): Promise<Project | null> => {
   const { data, error } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("id", id)
+    .from('projects')
+    .select('*')
+    .eq('id', id)
     .single();
 
   if (error) {
-    console.error("Error fetching project:", error);
+    console.error('Error fetching project:', error);
     throw error;
   }
 
@@ -56,7 +56,7 @@ export const getProjectById = async (id: string): Promise<Project | null> => {
     coverImage: data.cover_image || undefined,
     createdAt: new Date(data.created_at),
     updatedAt: new Date(data.updated_at),
-    tasks,
+    tasks
   };
 };
 
@@ -66,24 +66,24 @@ export const createProject = async (projectData: {
   coverImage?: string;
 }): Promise<Project> => {
   const { data: user } = await supabase.auth.getUser();
-
+  
   if (!user.user) {
-    throw new Error("User not authenticated");
+    throw new Error('User not authenticated');
   }
 
   const { data, error } = await supabase
-    .from("projects")
+    .from('projects')
     .insert({
       title: projectData.title,
       description: projectData.description || null,
       cover_image: projectData.coverImage || null,
-      created_by: user.user.id,
+      created_by: user.user.id
     })
     .select()
     .single();
 
   if (error) {
-    console.error("Error creating project:", error);
+    console.error('Error creating project:', error);
     throw error;
   }
 
@@ -94,7 +94,7 @@ export const createProject = async (projectData: {
     coverImage: data.cover_image || undefined,
     createdAt: new Date(data.created_at),
     updatedAt: new Date(data.updated_at),
-    tasks: [],
+    tasks: []
   };
 };
 
@@ -107,46 +107,47 @@ export const updateProject = async (
   }
 ): Promise<void> => {
   const { error } = await supabase
-    .from("projects")
+    .from('projects')
     .update({
       title: projectData.title,
       description: projectData.description,
       cover_image: projectData.coverImage,
-      updated_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     })
-    .eq("id", id);
+    .eq('id', id);
 
   if (error) {
-    console.error("Error updating project:", error);
+    console.error('Error updating project:', error);
     throw error;
   }
 };
 
 export const deleteProject = async (id: string): Promise<void> => {
-  const { error } = await supabase.from("projects").delete().eq("id", id);
+  const { error } = await supabase
+    .from('projects')
+    .delete()
+    .eq('id', id);
 
   if (error) {
-    console.error("Error deleting project:", error);
+    console.error('Error deleting project:', error);
     throw error;
   }
 };
 
 // Task services
-export const getTasksByProjectId = async (
-  projectId: string
-): Promise<Task[]> => {
+export const getTasksByProjectId = async (projectId: string): Promise<Task[]> => {
   const { data, error } = await supabase
-    .from("tasks")
-    .select("*")
-    .eq("project_id", projectId)
-    .order("created_at", { ascending: false });
+    .from('tasks')
+    .select('*')
+    .eq('project_id', projectId)
+    .order('created_at', { ascending: false });
 
   if (error) {
-    console.error("Error fetching tasks:", error);
+    console.error('Error fetching tasks:', error);
     throw error;
   }
 
-  return data.map((task) => ({
+  return data.map(task => ({
     id: task.id,
     title: task.title,
     description: task.description || undefined,
@@ -156,19 +157,19 @@ export const getTasksByProjectId = async (
     createdAt: new Date(task.created_at),
     assignedTo: task.assigned_to || undefined,
     projectId: task.project_id,
-    image: task.image || undefined,
+    image: task.image || undefined
   }));
 };
 
 export const getTaskById = async (id: string): Promise<Task | null> => {
   const { data, error } = await supabase
-    .from("tasks")
-    .select("*")
-    .eq("id", id)
+    .from('tasks')
+    .select('*')
+    .eq('id', id)
     .single();
 
   if (error) {
-    console.error("Error fetching task:", error);
+    console.error('Error fetching task:', error);
     throw error;
   }
 
@@ -184,7 +185,7 @@ export const getTaskById = async (id: string): Promise<Task | null> => {
     createdAt: new Date(data.created_at),
     assignedTo: data.assigned_to || undefined,
     projectId: data.project_id,
-    image: data.image || undefined,
+    image: data.image || undefined
   };
 };
 
@@ -198,7 +199,7 @@ export const createTask = async (taskData: {
   image?: string;
 }): Promise<Task> => {
   const { data, error } = await supabase
-    .from("tasks")
+    .from('tasks')
     .insert({
       title: taskData.title,
       description: taskData.description || null,
@@ -206,27 +207,27 @@ export const createTask = async (taskData: {
       due_date: taskData.dueDate?.toISOString() || null,
       status: taskData.status,
       project_id: taskData.projectId,
-      image: taskData.image || null,
+      image: taskData.image || null
     })
     .select()
     .single();
 
   if (error) {
-    console.error("Error creating task:", error);
+    console.error('Error creating task:', error);
     throw error;
   }
 
   return {
     id: data.id,
-    title: data.title,
-    description: data.description || undefined,
-    status: data.status as TaskStatus,
-    priority: data.priority as Priority,
+    title: taskData.title,
+    description: taskData.description || undefined,
+    status: taskData.status as TaskStatus,
+    priority: taskData.priority as Priority,
     dueDate: data.due_date ? new Date(data.due_date) : undefined,
     createdAt: new Date(data.created_at),
     assignedTo: data.assigned_to || undefined,
     projectId: data.project_id,
-    image: data.image || undefined,
+    image: taskData.image || undefined
   };
 };
 
@@ -243,7 +244,7 @@ export const updateTask = async (
   }
 ): Promise<void> => {
   const { error } = await supabase
-    .from("tasks")
+    .from('tasks')
     .update({
       title: taskData.title,
       description: taskData.description,
@@ -251,12 +252,12 @@ export const updateTask = async (
       due_date: taskData.dueDate?.toISOString() || null,
       status: taskData.status,
       assigned_to: taskData.assignedTo,
-      image: taskData.image,
+      image: taskData.image
     })
-    .eq("id", id);
+    .eq('id', id);
 
   if (error) {
-    console.error("Error updating task:", error);
+    console.error('Error updating task:', error);
     throw error;
   }
 };
@@ -266,23 +267,26 @@ export const updateTaskStatus = async (
   status: TaskStatus
 ): Promise<void> => {
   const { error } = await supabase
-    .from("tasks")
+    .from('tasks')
     .update({
-      status,
+      status
     })
-    .eq("id", id);
+    .eq('id', id);
 
   if (error) {
-    console.error("Error updating task status:", error);
+    console.error('Error updating task status:', error);
     throw error;
   }
 };
 
 export const deleteTask = async (id: string): Promise<void> => {
-  const { error } = await supabase.from("tasks").delete().eq("id", id);
+  const { error } = await supabase
+    .from('tasks')
+    .delete()
+    .eq('id', id);
 
   if (error) {
-    console.error("Error deleting task:", error);
+    console.error('Error deleting task:', error);
     throw error;
   }
 };
@@ -290,46 +294,71 @@ export const deleteTask = async (id: string): Promise<void> => {
 // Profile service
 export const getUserProfile = async () => {
   const { data: userData } = await supabase.auth.getUser();
-
+  
   if (!userData.user) {
     return null;
   }
-
+  
   const { data, error } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", userData.user.id)
+    .from('profiles')
+    .select('*')
+    .eq('id', userData.user.id)
     .single();
-
+    
   if (error) {
-    console.error("Error fetching user profile:", error);
+    console.error('Error fetching user profile:', error);
     throw error;
   }
-
+  
   return data;
 };
 
 export const updateUserProfile = async (profileData: {
   fullName?: string;
   avatarUrl?: string;
+  age?: number;
+  dateOfBirth?: string;
+  occupation?: string;
+  bio?: string;
+  linkedinUrl?: string;
+  twitterUrl?: string;
+  githubUrl?: string;
 }) => {
   const { data: userData } = await supabase.auth.getUser();
-
+  
   if (!userData.user) {
-    throw new Error("User not authenticated");
+    throw new Error('User not authenticated');
   }
-
+  
   const { error } = await supabase
-    .from("profiles")
+    .from('profiles')
     .update({
       full_name: profileData.fullName,
       avatar_url: profileData.avatarUrl,
-      updated_at: new Date().toISOString(),
+      age: profileData.age,
+      date_of_birth: profileData.dateOfBirth,
+      occupation: profileData.occupation,
+      bio: profileData.bio,
+      linkedin_url: profileData.linkedinUrl,
+      twitter_url: profileData.twitterUrl,
+      github_url: profileData.githubUrl,
+      updated_at: new Date().toISOString()
     })
-    .eq("id", userData.user.id);
-
+    .eq('id', userData.user.id);
+    
   if (error) {
-    console.error("Error updating user profile:", error);
+    console.error('Error updating user profile:', error);
+    throw error;
+  }
+};
+
+export const deleteUserAccount = async () => {
+  const { error } = await supabase.auth.admin.deleteUser(
+    (await supabase.auth.getUser()).data.user?.id || ''
+  );
+  
+  if (error) {
+    console.error('Error deleting user account:', error);
     throw error;
   }
 };

@@ -282,3 +282,8 @@
     @apply border-gray-700;
   }
 }
+
+::selection{
+  background-color: #eb8125;
+  color: white;
+}

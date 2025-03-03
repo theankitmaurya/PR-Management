@@ -14,6 +14,8 @@ import TeamPage from "./pages/TeamPage";
 import Dashboard from "./pages/Dashboard";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Activity from "./pages/Activity";
+import SettingsPage from "./pages/SettingsPage";
+import ProfilePage from "./pages/ProfilePage";
 
 const queryClient = new QueryClient();
 
@@ -38,9 +40,10 @@ const App = () => (
                   <Route path="/projects" element={<Index />} />
                   <Route path="/project/:id" element={<ProjectPage />} />
                   <Route path="/tasks" element={<Index />} />
-                  <Route path="/settings" element={<Index />} />
+                  <Route path="/settings" element={<SettingsPage />} />
                   <Route path="/team" element={<TeamPage />} />
                   <Route path="/activity" element={<Activity />} />
+                  <Route path="/profile" element={<ProfilePage />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 </Route>
               </Route>

@@ -6,11 +6,12 @@ import { toast } from "@/components/ui/use-toast";
 
 interface AuthContextProps {
   user: User | null;
+  currentUser: User | null; // Added alias for backward compatibility
   session: Session | null;
   isLoading: boolean;
   signUp: (email: string, password: string, fullName: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
+  signOut: (navigateFn?: any) => Promise<void>; // Updated to accept navigate
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -115,7 +116,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const signOut = async () => {
+  const signOut = async (navigateFn?: any) => {
     try {
       setIsLoading(true);
       const { error } = await supabase.auth.signOut();
@@ -128,7 +129,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         title: "Signed out successfully",
       });
 
-      navigate("/auth", { replace: true });
+      if (navigateFn) {
+        navigateFn("/auth", { replace: true });
+      } else {
+        navigate("/auth", { replace: true });
+      }
     } catch (error: any) {
       toast({
         title: "Sign out failed",
@@ -142,6 +147,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const value = {
     user,
+    currentUser: user, // Add the alias
     session,
     isLoading,
     signUp,
