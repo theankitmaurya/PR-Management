@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   Card,
   CardContent,
@@ -30,8 +31,6 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { deleteUserAccount } from "@/services/supabaseService";
 import { Language } from "@/utils/types";
-import { useTranslation } from "react-i18next";
-import i18n from "@/utils/i18n";
 
 const LANGUAGE_OPTIONS = [
   { value: Language.ENGLISH, label: "English" },
@@ -43,18 +42,16 @@ const LANGUAGE_OPTIONS = [
 
 export default function SettingsPage() {
   const { currentUser, signOut } = useAuth();
+  const { language, setLanguage, t } = useLanguage();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const {t} = useTranslation();
 
-  const [language, setLanguage] = useState(i18n.language);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [confirmEmail, setConfirmEmail] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleLanguageChange = (value: string) => {
+  const handleLanguageChange = (value: Language) => {
     setLanguage(value);
-    i18n.changeLanguage(value);
     toast({
       title: t("Language Updated"),
       description: t("Your language preference has been updated."),
@@ -67,8 +64,8 @@ export default function SettingsPage() {
 
     if (confirmEmail !== currentUser.email) {
       toast({
-        title: "Error",
-        description: "Email confirmation does not match",
+        title: t("Error"),
+        description: t("Email confirmation does not match"),
         variant: "destructive",
       });
       return;
@@ -79,16 +76,16 @@ export default function SettingsPage() {
       await deleteUserAccount();
 
       toast({
-        title: "Account Deleted",
-        description: "Your account has been successfully deleted.",
+        title: t("Account Deleted"),
+        description: t("Your account has been successfully deleted."),
       });
 
       await signOut(navigate);
     } catch (error) {
       console.error("Error deleting account:", error);
       toast({
-        title: "Error",
-        description: "Failed to delete account. Please try again later.",
+        title: t("Error"),
+        description: t("Failed to delete account. Please try again later."),
         variant: "destructive",
       });
     } finally {
@@ -100,27 +97,27 @@ export default function SettingsPage() {
   if (!currentUser) {
     return (
       <div className="flex items-center justify-center h-screen">
-        Please log in to view settings.
+        {t("Please log in to view settings.")}
       </div>
     );
   }
 
   return (
     <div className="container max-w-4xl py-8">
-      <h1 className="text-3xl font-bold mb-6">Settings</h1>
+      <h1 className="text-3xl font-bold mb-6">{t("settings")}</h1>
 
       <div className="grid grid-cols-1 gap-8">
         <Card>
           <CardHeader>
-            <CardTitle>Language Settings</CardTitle>
+            <CardTitle>{t("language")}</CardTitle>
             <CardDescription>
-              Change the display language for the application
+              {t("Change the display language for the application")}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="language">Display Language</Label>
+                <Label htmlFor="language">{t("Display Language")}</Label>
                 <Select
                   value={language}
                   onValueChange={(value) =>
@@ -128,7 +125,7 @@ export default function SettingsPage() {
                   }
                 >
                   <SelectTrigger className="w-full sm:w-[300px]">
-                    <SelectValue placeholder="Select language" />
+                    <SelectValue placeholder={t("Select language")} />
                   </SelectTrigger>
                   <SelectContent>
                     {LANGUAGE_OPTIONS.map((option) => (
@@ -145,38 +142,39 @@ export default function SettingsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Danger Zone</CardTitle>
+            <CardTitle>{t("dangerZone")}</CardTitle>
             <CardDescription>
-              Irreversible actions for your account
+              {t("Irreversible actions for your account")}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="border border-destructive rounded-md p-4">
                 <h3 className="text-lg font-semibold text-destructive mb-2">
-                  Delete Account
+                  {t("deleteAccount")}
                 </h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Once you delete your account, there is no going back. This
-                  action cannot be undone.
+                  {t(
+                    "Once you delete your account, there is no going back. This action cannot be undone."
+                  )}
                 </p>
 
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="destructive">Delete Account</Button>
+                    <Button variant="destructive">{t("deleteAccount")}</Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Are you absolutely sure?</DialogTitle>
+                      <DialogTitle>{t("Are you absolutely sure?")}</DialogTitle>
                       <DialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete your account and remove all of your data from our
-                        servers.
+                        {t(
+                          "This action cannot be undone. This will permanently delete your account and remove of your data from our servers."
+                        )}
                       </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                       <p className="text-sm text-muted-foreground">
-                        To confirm, please type your email address:
+                        {t("To confirm, please type your email address:")}
                       </p>
                       <Input
                         value={confirmEmail}
@@ -198,7 +196,7 @@ export default function SettingsPage() {
                           confirmEmail !== currentUser.email || isDeleting
                         }
                       >
-                        {isDeleting ? "Deleting..." : "Delete Account"}
+                        {isDeleting ? t("Deleting...") : t("Delete Account")}
                       </Button>
                     </DialogFooter>
                   </DialogContent>

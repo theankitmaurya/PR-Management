@@ -12,10 +12,11 @@ import ProjectPage from "./pages/ProjectPage";
 import AuthPage from "./pages/AuthPage";
 import TeamPage from "./pages/TeamPage";
 import Dashboard from "./pages/Dashboard";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import Activity from "./pages/Activity";
-import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
+import SettingsPage from "./pages/SettingsPage";
+import Activity from "./pages/Activity";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { LanguageProvider } from "./context/LanguageContext";
 
 const queryClient = new QueryClient();
 
@@ -23,35 +24,37 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="dark" storageKey="collabworks-theme">
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AuthProvider>
-            <Routes>
-              {/* Public routes */}
-              <Route path="/auth" element={<AuthPage />} />
+        <LanguageProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AuthProvider>
+              <Routes>
+                {/* Public routes */}
+                <Route path="/auth" element={<AuthPage />} />
 
-              {/* Protected routes */}
-              <Route element={<AuthGuard />}>
-                <Route path="/" element={<MainLayout />}>
-                  {/* Set Dashboard as default landing page */}
-                  <Route index element={<Dashboard />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/projects" element={<Index />} />
-                  <Route path="/project/:id" element={<ProjectPage />} />
-                  <Route path="/tasks" element={<Index />} />
-                  <Route path="/settings" element={<SettingsPage />} />
-                  <Route path="/team" element={<TeamPage />} />
-                  <Route path="/activity" element={<Activity />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                {/* Protected routes */}
+                <Route element={<AuthGuard />}>
+                  <Route path="/" element={<MainLayout />}>
+                    {/* Set Dashboard as default landing page */}
+                    <Route index element={<Dashboard />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/projects" element={<Index />} />
+                    <Route path="/project/:id" element={<ProjectPage />} />
+                    <Route path="/tasks" element={<Index />} />
+                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/team" element={<TeamPage />} />
+                    <Route path="/activity" element={<Activity />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  </Route>
                 </Route>
-              </Route>
 
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </AuthProvider>
-        </BrowserRouter>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AuthProvider>
+          </BrowserRouter>
+        </LanguageProvider>
       </TooltipProvider>
     </ThemeProvider>
   </QueryClientProvider>

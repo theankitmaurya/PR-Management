@@ -108,14 +108,16 @@ export function EditTaskModal({
   };
 
   const handleDelete = () => {
-    onTaskDelete(task.id);
-    setDeleteDialogOpen(false);
-    setOpen(false);
+    if (onTaskDelete) {
+      onTaskDelete(task.id);
+      setDeleteDialogOpen(false);
+      setOpen(false);
 
-    toast({
-      title: "Task deleted",
-      description: `"${task.title}" has been deleted`,
-    });
+      toast({
+        title: "Task deleted",
+        description: `"${task.title}" has been deleted`,
+      });
+    }
   };
 
   return (

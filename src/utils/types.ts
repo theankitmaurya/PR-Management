@@ -1,3 +1,4 @@
+
 export enum Priority {
   LOW = "LOW",
   MEDIUM = "MEDIUM",
@@ -61,4 +62,15 @@ export enum Language {
   FRENCH = "fr",
   GERMAN = "de",
   CHINESE = "zh"
+}
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  status: "Full Time" | "Part Time" | "Internship";
+  employeeId: string;
+  email: string;
+  role: string;
+  avatarUrl?: string;
+  createdAt: Date;
 }

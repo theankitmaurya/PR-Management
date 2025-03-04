@@ -141,6 +141,11 @@ const ProjectPage = () => {
       });
 
       await deleteTask(taskId);
+
+      toast({
+        title: "Task deleted",
+        description: "The task has been permanently deleted.",
+      });
     } catch (error) {
       console.error("Error deleting task:", error);
       toast({
